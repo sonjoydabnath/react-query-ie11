@@ -3,8 +3,11 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import { useHello } from "../components/ApiHooks";
 
-const Home: NextPage = () => {
+const Hello: NextPage = () => {
+  const data = useHello();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,21 +26,17 @@ const Home: NextPage = () => {
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <Link href="/hello" passHref shallow>
-            <a className={styles.card}>
-              <h2>Hello</h2>
-              <p>Say Hello</p>
-            </a>
-          </Link>
+        {data.error}
+        {data.isLoading && <h4> Loading... </h4>}
 
-          <Link href="/tasks" passHref shallow>
-            <a className={styles.card}>
-              <h2>Tasks</h2>
-              <p>View Your Tasks</p>
-            </a>
-          </Link>
-        </div>
+        <h4> Hello {data.data?.name} </h4>
+
+        <Link href="/" passHref shallow>
+          <a className={styles.card}>
+            <h2>Home</h2>
+            <p>Go Back Home</p>
+          </a>
+        </Link>
       </main>
 
       <footer className={styles.footer}>
@@ -56,4 +55,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Hello;

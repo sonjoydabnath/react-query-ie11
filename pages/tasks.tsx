@@ -4,7 +4,11 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 
-const Home: NextPage = () => {
+import { useTasks } from "../components/ApiHooks";
+
+const Tasks: NextPage = () => {
+  const data = useTasks();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,21 +27,36 @@ const Home: NextPage = () => {
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <Link href="/hello" passHref shallow>
-            <a className={styles.card}>
-              <h2>Hello</h2>
-              <p>Say Hello</p>
-            </a>
-          </Link>
+        <div>
+          {data.error}
+          {data.isLoading && <h4> Loading... </h4>}
 
-          <Link href="/tasks" passHref shallow>
-            <a className={styles.card}>
-              <h2>Tasks</h2>
-              <p>View Your Tasks</p>
-            </a>
-          </Link>
+          {data.data?.items?.length ? (
+            <ol>
+              {data.data.items.map((task) => {
+                return (
+                  <li
+                    key={task.id}
+                    style={{
+                      color: `${task.isCompleted ? "green" : undefined}`,
+                    }}
+                  >
+                    {task.title}
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p> No tasks Found </p>
+          )}
         </div>
+
+        <Link href="/" passHref shallow>
+          <a className={styles.card}>
+            <h2>Home</h2>
+            <p>Go Back Home</p>
+          </a>
+        </Link>
       </main>
 
       <footer className={styles.footer}>
@@ -56,4 +75,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Tasks;
